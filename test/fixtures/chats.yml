@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  type:
+  user_id: 1
+  concert: one
+  unread_count: MyString
+
+two:
+  type:
+  user_id: 2
+  concert: two
+  unread_count: MyString

@@ -1,0 +1,9 @@
+one:
+  id: 1
+  session_token: abcdefg123456
+  name: Martin
+
+two:
+  id: 2
+  session_token: 123456abcdefg
+  name: Christian
