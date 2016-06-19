@@ -55,4 +55,14 @@ class AuthenticationControllerTest < ActionDispatch::IntegrationTest
     assert_response :bad_request
   end
 
+  test "should allow big profile integer id values" do
+    @fb_user.stubs(:fetch).returns(@fb_user)
+
+    post '/get_session_token', as: :json,
+         params: { auth: { id: 10206089230415618,
+                           access_token: @access_token } }
+
+    assert_response :success
+  end
+
 end
