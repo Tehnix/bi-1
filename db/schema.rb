@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160619173528) do
+ActiveRecord::Schema.define(version: 20160619211435) do
 
   create_table "chats", force: :cascade do |t|
     t.string   "type"
@@ -34,13 +34,12 @@ ActiveRecord::Schema.define(version: 20160619173528) do
 
   create_table "users", force: :cascade do |t|
     t.string   "session_token"
-    t.string   "name"
     t.integer  "chats_id"
     t.integer  "messages_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.integer  "profile_id",    limit: 8
     t.index ["chats_id"], name: "index_users_on_chats_id"
-    t.index ["id"], name: "sqlite_autoindex_users_1", unique: true
     t.index ["messages_id"], name: "index_users_on_messages_id"
   end
 

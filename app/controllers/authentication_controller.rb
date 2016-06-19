@@ -11,22 +11,30 @@ class AuthenticationController < ApplicationController
     end
 
     profile_id = permitted_params[:id]
-    access_token = permitted_params[:access_token]
+    @access_token = permitted_params[:access_token]
 
-    fb_user = FbGraph2::User.new(profile_id).authenticate(access_token).fetch
+    fb_user = FbGraph2::User.new(profile_id).authenticate(@access_token)
     begin
+      # The user is valid if the fetch command is successful
       fb_user.fetch
 
-      @user = User.create_with(name: fb_user.first_name)
-                  .find_or_create_by(id: profile_id)
+      # Extend the short-term token to a long-term one
+      auth = FbGraph2::Auth.new(ENV['FACEBOOK_APP_ID'],
+                                ENV['FACEBOOK_APP_SECRET'])
+      auth.fb_exchange_token = @access_token
+      @access_token = auth.access_token!
 
-      session_token = Digest::SHA256.hexdigest(access_token)
+      @user = User.find_or_create_by(profile_id: profile_id)
+
+      session_token = Digest::SHA256.hexdigest(@access_token)
 
       if @user.session_token != session_token
         @user.update(session_token: session_token)
       end
 
-      render :get_session_token, status: :ok, location: '/get_session_token'
+      render :get_session_token, status: :ok,
+             location: '/get_session_token'
+
     rescue FbGraph2::Exception::InvalidToken => e
       render json: { error: e.message }, status: :unauthorized
     end
