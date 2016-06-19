@@ -1,11 +1,13 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  artist: MyString
-  time_of_day: 2016-06-15 11:16:16
-  venue: MyString
+  artist: Disturbed
+  start_time: 2016-06-15 11:16:16
+  end_time: 2016-06-15 11:36:16
+  venue: Orange Stage
 
 two:
-  artist: MyString
-  time_of_day: 2016-06-15 11:16:16
-  venue: MyString
+  artist: Taproot
+  start_time: 2016-06-15 11:16:16
+  end_time: 2016-06-15 12:16:16
+  venue: Apollo
