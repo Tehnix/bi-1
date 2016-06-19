@@ -3,8 +3,15 @@ class AuthenticationController < ApplicationController
   skip_before_action :require_token
 
   def get_session_token
-    profile_id = params[:id]
-    access_token = params[:access_token]
+    begin
+      permitted_params = auth_params
+    rescue ActionController::ParameterMissing => e
+      render json: { error: e.message }, status: :bad_request
+      return
+    end
+
+    profile_id = permitted_params[:id]
+    access_token = permitted_params[:access_token]
 
     fb_user = FbGraph2::User.new(profile_id).authenticate(access_token).fetch
     begin
@@ -23,6 +30,12 @@ class AuthenticationController < ApplicationController
     rescue FbGraph2::Exception::InvalidToken => e
       render json: { error: e.message }, status: :unauthorized
     end
+  end
+
+  private
+
+  def auth_params
+    params.require(:auth).permit(:id, :access_token)
   end
 
 end

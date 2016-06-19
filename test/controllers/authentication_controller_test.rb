@@ -16,8 +16,8 @@ class AuthenticationControllerTest < ActionDispatch::IntegrationTest
     @fb_user.stubs(:fetch).returns(@fb_user)
 
     post '/get_session_token', as: :json,
-         params: { id: @user.id,
-                   access_token: @access_token }
+         params: { auth: { id: @user.id,
+                           access_token: @access_token } }
     assert_response :success
   end
 
@@ -28,8 +28,8 @@ class AuthenticationControllerTest < ActionDispatch::IntegrationTest
             .raises(FbGraph2::Exception::InvalidToken, 'derp')
 
     post '/get_session_token', as: :json,
-         params: { id: @user.id,
-                   access_token: @access_token }
+         params: { auth: { id: @user.id,
+                           access_token: @access_token } }
 
     assert_response :unauthorized
   end
@@ -38,13 +38,21 @@ class AuthenticationControllerTest < ActionDispatch::IntegrationTest
     @fb_user.stubs(:fetch).returns(@fb_user)
 
     post '/get_session_token', as: :json,
-         params: { id: 43,
-                   access_token: @access_token }
+         params: { auth: { id: 43,
+                           access_token: @access_token } }
     user = User.find_by(id: 43)
 
     assert_instance_of User, user
     assert_equal user.name, @user.name
     assert_match /^[a-z0-9]{64}$/, user.session_token
+  end
+
+  test "should return invalid request if id and access_token are missing" do
+    @fb_user.stubs(:fetch).returns(@fb_user)
+
+    post '/get_session_token'
+
+    assert_response :bad_request
   end
 
 end
