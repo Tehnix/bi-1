@@ -40,6 +40,7 @@ group :development do
   gem 'capistrano-file-permissions'
   gem 'capistrano3-puma'
   gem 'capistrano-rbenv'
+  gem 'capistrano-bundler'
 end
 
 group :production do

@@ -23,3 +23,5 @@
 .rbenv-vars
 .\#*
 \#*
+
+.ruby-version
