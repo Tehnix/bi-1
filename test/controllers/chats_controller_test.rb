@@ -4,14 +4,14 @@ require 'test_helper'
 
 class ChatsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @chat = chats(:one)
-    @user = users(:one)
+    @chat = chats(:disturbed_chat)
+    @martin = users(:martin)
   end
 
   test "should get index" do
 
     get chats_url, as: :json, headers: {
-          "Authorization" => "Token token=#{@user.session_token}"
+          "Authorization" => "Token token=#{@martin.session_token}"
         }
 
     assert_response :success
@@ -19,7 +19,7 @@ class ChatsControllerTest < ActionDispatch::IntegrationTest
 
   test "should show chat" do
     get chat_url(@chat), as: :json, headers: {
-          "Authorization" => "Token token=#{@user.session_token}"
+          "Authorization" => "Token token=#{@martin.session_token}"
         }
 
     assert_response :success

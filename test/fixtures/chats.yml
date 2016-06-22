@@ -1,13 +1,15 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+disturbed_chat:
+  users: martin, christian, line
+  concert: disturbed
+  unread_count: 0
 
-one:
-  type:
-  user_id: 1
-  concert: one
-  unread_count: MyString
+taproot_chat:
+  users: martin, christian, maiken
+  concert: taproot
+  unread_count: 0
 
-two:
-  type:
-  user_id: 2
-  concert: two
-  unread_count: MyString
+
+above_beyond_chat:
+  users: martin, benjamin
+  concert: above_and_beyond
+  unread_count: 0

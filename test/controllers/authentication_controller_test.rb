@@ -2,7 +2,7 @@ require 'test_helper'
 
 class AuthenticationControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @user = users(:one)
+    @martin = users(:martin)
     @access_token = 'abcdefg123456'
 
     @fb_user = stub()
@@ -22,7 +22,7 @@ class AuthenticationControllerTest < ActionDispatch::IntegrationTest
     @fb_user.stubs(:fetch).returns(@fb_user)
 
     post '/get_session_token', as: :json,
-         params: { auth: { id: @user.id,
+         params: { auth: { id: @martin.id,
                            access_token: @access_token } }
     assert_response :success
     assert_equal 'success', response.parsed_body['user']['access_token']
@@ -33,7 +33,7 @@ class AuthenticationControllerTest < ActionDispatch::IntegrationTest
             .raises(FbGraph2::Exception::InvalidToken, 'derp')
 
     post '/get_session_token', as: :json,
-         params: { auth: { id: @user.id,
+         params: { auth: { id: @martin.id,
                            access_token: @access_token } }
 
     assert_response :unauthorized

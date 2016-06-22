@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160619225902) do
+ActiveRecord::Schema.define(version: 20160620203450) do
 
   create_table "chats", force: :cascade do |t|
     t.string   "type"
@@ -24,6 +24,13 @@ ActiveRecord::Schema.define(version: 20160619225902) do
     t.index ["user_id"], name: "index_chats_on_user_id"
   end
 
+  create_table "chats_users", force: :cascade do |t|
+    t.integer "chat_id"
+    t.integer "user_id"
+    t.index ["chat_id"], name: "index_chats_users_on_chat_id"
+    t.index ["user_id"], name: "index_chats_users_on_user_id"
+  end
+
   create_table "concerts", force: :cascade do |t|
     t.string   "artist"
     t.datetime "start_time"
@@ -33,6 +40,20 @@ ActiveRecord::Schema.define(version: 20160619225902) do
     t.datetime "end_time"
   end
 
+  create_table "friendships", force: :cascade do |t|
+    t.integer "friend_id"
+    t.integer "user_id"
+    t.index ["friend_id"], name: "index_friendships_on_friend_id"
+    t.index ["user_id"], name: "index_friendships_on_user_id"
+  end
+
+  create_table "interests", force: :cascade do |t|
+    t.integer "concert_id"
+    t.integer "user_id"
+    t.index ["concert_id"], name: "index_interests_on_concert_id"
+    t.index ["user_id"], name: "index_interests_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string   "session_token"
     t.integer  "chats_id"
@@ -40,7 +61,9 @@ ActiveRecord::Schema.define(version: 20160619225902) do
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
     t.integer  "profile_id",    limit: 8
+    t.integer  "friendship_id"
     t.index ["chats_id"], name: "index_users_on_chats_id"
+    t.index ["friendship_id"], name: "index_users_on_friendship_id"
     t.index ["messages_id"], name: "index_users_on_messages_id"
   end
 

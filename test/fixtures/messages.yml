@@ -1,0 +1,29 @@
+above_beyond_msg_1_martin:
+  author: martin
+  date: 2016-06-22 18:04:27
+  content: Hey! What up? Har du det max?
+  chat: above_beyond_chat
+
+above_beyond_msg_2_benjamin:
+  author: benjamin
+  date: 2016-06-22 18:05:27
+  content: Ja maaaaijn! Jeg har det max!
+  chat: above_beyond_chat
+
+disturbed_msg_1_martin:
+  author: martin
+  date: 2016-06-22 18:05:27
+  content: What
+  chat: disturbed_chat
+
+disturbed_msg_2_christian:
+  author: christian
+  date: 2016-06-22 18:06:27
+  content: is
+  chat: disturbed_chat
+
+disturbed_msg_3_mads:
+  author: mads
+  date: 2016-06-22 18:07:27
+  content: up?!
+  chat: disturbed_chat

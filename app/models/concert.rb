@@ -1,6 +1,10 @@
 require 'open-uri'
 
 class Concert < ApplicationRecord
+  attr_accessor :num_attendees, :friend_attendees
+
+  has_many :interests
+  has_many :attendees, through: :interests, class_name: 'User', source: :user, foreign_key: 'attendant_id'
 
   class << self
 

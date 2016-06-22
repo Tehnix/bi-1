@@ -1,0 +1,23 @@
+martin_christian:
+  user: martin
+  friend: christian
+
+martin_maiken:
+  user: martin
+  friend: maiken
+
+christian_line:
+  user: christian
+  friend: line
+
+martin_benjamin:
+  user: martin
+  friend: benjamin
+
+christian_mads:
+  user: christian
+  friend: mads
+
+line_mads:
+  user: line
+  friend: mads

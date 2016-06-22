@@ -1,7 +1,23 @@
-one:
-  id: 1
-  session_token: abcdefg123456
+martin:
+  profile_id: 123456
+  session_token: martinsession
 
-two:
-  id: 2
-  session_token: 123456abcdefg
+christian:
+  profile_id: 234561
+  session_token: christiansession
+
+maiken:
+  profile_id: 345612
+  session_token: maikensession
+
+line:
+  profile_id: 456123
+  session_token: linesession
+
+mads:
+  profile_id: 561234
+  session_token: madssession
+
+benjamin:
+  profile_id: 612345
+  session_token: benjaminsession
