@@ -14,7 +14,8 @@ class ConcertsController < ApplicationController
   end
 
   def attend
-
+    @concert.attendees << @current_user
+    @concert.save
   end
 
   private

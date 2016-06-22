@@ -35,6 +35,14 @@ set :deploy_to, '/var/www/api.rfplusone.dk'
 # Default value for keep_releases is 5
 # set :keep_releases, 5
 
+# rbenv
+
+set :rbenv_type, :user # or :system, depends on your rbenv setup
+set :rbenv_ruby, '2.3.0'
+set :rbenv_prefix, "RBENV_ROOT=#{fetch(:rbenv_path)} RBENV_VERSION=#{fetch(:rbenv_ruby)} #{fetch(:rbenv_path)}/bin/rbenv exec"
+set :rbenv_map_bins, %w{rake gem bundle ruby rails}
+set :rbenv_roles, :all # default value
+
 namespace :puma do
   desc 'Create Directories for Puma Pids and Socket'
   task :make_dirs do
