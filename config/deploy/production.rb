@@ -4,7 +4,8 @@
 # You can define all roles on a single server, or split them:
 
 # server 'example.com', user: 'deploy', roles: %w{app db web}, my_property: :my_value
-server 'rfplusone.dk', user: 'rfplusone', roles: %w{app}
+set :user, 'rfplusone'
+server 'rfplusone.dk', user: fetch(:user), roles: %w{app}
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 
 set :puma_threads,    [4, 10]

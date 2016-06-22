@@ -1,12 +1,16 @@
-namespace :rfplusone do
-  desc 'Processes graphic assets'
-  task :process_image do
-    on roles(:app) do
-      run_locally do
-        rsync_host = host.to_s
+require 'erb'
 
+namespace :deploy do
+  desc 'Processes graphic assets'
+  task :process_graphics do
+    on roles(:app) do
+      rsync_host = host.to_s
+      execute "mkdir -p public/images/"
+
+      run_locally do
         public_path = "#{Dir.pwd}/public"
         icons_path = "#{public_path}/icons"
+        images_path = "#{public_path}/images"
         execute "mkdir -p #{icons_path}"
 
         # ['198', '208', '248', '262', '396', '416', '526', '624'].each do |dpi|
@@ -17,7 +21,6 @@ namespace :rfplusone do
                     '192x192'],
           favicon: ['16x16', '32x32', '48x48', '96x96']
         }
-
 
         # Apple
         dimensions[:apple].each do |dim|
@@ -36,6 +39,7 @@ namespace :rfplusone do
         end
 
         # Favicon
+        width, height = dimensions[:favicon][-1].split('x')
         execute "inkscape -z -e "\
                 "#{icons_path}/favicon-#{dimensions[:favicon][-1]}.png "\
                 "-w #{width} -h #{height} -C #{public_path}/app_icon.svg"
@@ -53,13 +57,48 @@ namespace :rfplusone do
 
         execute "mv #{icons_path}/favicon-#{dimensions[:favicon][-2]}.ico #{icons_path}/favicon.ico"
 
-        execute "rsync -av --delete #{icons_path} #{fetch(:user)}@#{rsync_host}:#{shared_path}/public/"
+        # shortcut icon
+        icons = []
+        icon_files = Dir["#{icons_path}/*"]
+        for icon in icon_files
+          icon = File.basename(icon)
+          if icon =~ /apple-touch-icon/
+            type = 'apple-touch-icon'
+          elsif icon =~ /\.ico$/
+            type = 'shortcut icon'
+          elsif icon =~ /android|favicon-/
+            type = 'icon'
+          end
+
+          dimensions = /[0-9]{2}x[0-9]{2}/.match(icon) || ''
+          unless dimensions.nil?
+            dimensions = 'sizes="' << dimensions.to_s << '"'
+          end
+
+          icons << { name: icon, dimensions: dimensions, type: type }
+        end
+
+        File.open("#{public_path}/index.html", "w+") do |f|
+          f.write(ERB.new(File.read("#{public_path}/index.html.erb"),
+                          nil, '-')
+                     .result(binding))
+        end
+
+        execute "inkscape -z -e "\
+                "#{images_path}/rfplusone.png "\
+                "-w 256 -h 256 -C #{public_path}/app_icon.svg"
+
+        execute "rsync -av --delete #{icons_path}/ #{public_path}/index.html #{fetch(:user)}@#{rsync_host}:#{current_path}/public/"
+
+        execute "rsync -av --delete #{images_path}/rfplusone.png #{fetch(:user)}@#{rsync_host}:#{current_path}/public/images/"
+
         execute "rm -rf #{icons_path}"
+        execute "rm -r #{images_path}/rfplusone.png"
       end
 
-      execute "rm #{deploy_path}/public/app_icon.svg"
+      execute "rm -r #{current_path}/public/app_icon.svg"
     end
   end
-
-  after :updated, :process_image
 end
+
+after "deploy:finishing", "deploy:process_graphics"

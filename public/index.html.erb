@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Roskilde Festival +1</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <%- for icon in icons -%>
+  <link rel="<%= icon[:type] %>" <%= icon[:dimensions] %> href="/<%= icon[:name] %>">
+  <%- end -%>
+  <style>
+  body {
+    background-color: #FFF5DF;
+    margin: 0;
+  }
+
+  div {
+    width: 95%;
+    max-width: 33em;
+    margin: 12em auto 0;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 42pt;
+    color: #999999;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: lighter;
+  }
+
+  img {
+    max-width: 256px;
+    width: 75%;
+    height: auto;
+  }
+  </style>
+</head>
+
+<body>
+  <div>
+    <h1>Roskilde Festival +1</h1>
+    <img src="/images/rfplusone.png" />
+  </div>
+</body>
+</html>
