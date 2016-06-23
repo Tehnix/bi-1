@@ -6,14 +6,15 @@ class ApplicationController < ActionController::API
   private
 
   def require_token
-    authenticate_or_request_with_http_token do |token, options|
+    authenticate_or_request_with_http_token do |token|
       @current_user = User.find_by(session_token: token)
-
-      if @current_user.nil?
-        render json: { error: "Not authorized" }, status: :unauthorized
-      end
-
-      true
+      @current_user unless @current_user.nil?
     end
+  end
+
+  def request_http_token_authentication(realm = "Application", message = nil)
+    self.headers["WWW-Authenticate"] = %(Token realm="#{realm.gsub(/"/, "")}")
+    self.__send__ :render, json: {
+      error: 'HTTP Token: Unauthorized.' }, status: :unauthorized
   end
 end
