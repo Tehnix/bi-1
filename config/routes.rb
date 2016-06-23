@@ -15,5 +15,5 @@ Rails.application.routes.draw do
   end
 
   # Authentication
-  post '/get_session_token', to: 'authentication#get_session_token'
+  post '/auth', to: 'authentication#get_session_token'
 end
