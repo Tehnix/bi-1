@@ -34,4 +34,14 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
 
     assert_equal @taproot.artist, martin.concerts[2].artist
   end
+
+  test "should be able to look for an individual and a group to a concert" do
+    post "/concerts/#{@taproot.id}/look_for_individual", as: :json, headers: {
+           "Authorization" => "Token token=#{@martin.session_token}"
+         }
+
+    post "/concerts/#{@taproot.id}/look_for_group", as: :json, headers: {
+           "Authorization" => "Token token=#{@martin.session_token}"
+         }
+  end
 end

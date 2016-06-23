@@ -3,8 +3,13 @@
 ## Get session token
 
 1. Send a post request to `/get_session_token` with the following JSON object
-   ```json
-   {'auth':{'profile_id':'PROFILE_ID', 'access_token': 'ACCESS_TOKEN'}}
+   ```javascript
+   {
+       'auth': {
+           'profile_id': 'PROFILE_ID',
+           'access_token': 'ACCESS_TOKEN'
+       }
+   }
    ```
 
 2. Store the returned extended access- and session token

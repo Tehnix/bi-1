@@ -95,8 +95,6 @@ namespace :deploy do
         execute "rm -rf #{icons_path}"
         execute "rm -r #{images_path}/rfplusone.png"
       end
-
-      execute "rm -r #{current_path}/public/app_icon.svg"
     end
   end
 end
