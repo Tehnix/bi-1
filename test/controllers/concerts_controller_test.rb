@@ -20,8 +20,6 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 2, response.parsed_body[2]['num_attendees']
   end
 
-
-  test "should find friends attending a certain concert" do
   test "should find attendees of a certain concert sorted by friend status" do
     get "/concerts/#{@taproot.id}", as: :json, headers: {
           "Authorization" => "Token token=#{@martin.session_token}"
