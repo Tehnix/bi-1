@@ -9,12 +9,15 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
     @disturbed = concerts(:disturbed)
   end
 
-  test "should list all concerts with attending friends through friendships" do
+  test "should list all concerts and the number of attendees" do
     get concerts_url, as: :json, headers: {
           "Authorization" => "Token token=#{@martin.session_token}"
         }
 
-    assert_equal @christian.profile_id, response.parsed_body[0]['friend_attendees'][0]['profile_id']
+    assert_equal 2, response.parsed_body[0]['num_attendees']
+    assert_equal 1, response.parsed_body[0]['num_friend_attendees']
+    assert_equal 3, response.parsed_body[1]['num_attendees']
+    assert_equal 2, response.parsed_body[2]['num_attendees']
   end
 
 
