@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160623072603) do
+ActiveRecord::Schema.define(version: 20160624135028) do
 
   create_table "chats", force: :cascade do |t|
     t.string   "type"
@@ -73,6 +73,7 @@ ActiveRecord::Schema.define(version: 20160623072603) do
     t.datetime "updated_at",              null: false
     t.integer  "profile_id",    limit: 8
     t.integer  "friendship_id"
+    t.string   "picture"
     t.index ["chats_id"], name: "index_users_on_chats_id"
     t.index ["friendship_id"], name: "index_users_on_friendship_id"
     t.index ["messages_id"], name: "index_users_on_messages_id"

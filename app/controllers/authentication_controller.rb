@@ -24,7 +24,8 @@ class AuthenticationController < ApplicationController
       auth.fb_exchange_token = @access_token
       @access_token = auth.access_token!.to_s
 
-      @user = User.find_or_create_by(profile_id: profile_id)
+      @user = User.create_with(picture: fb_user.picture.url)
+                  .find_or_create_by(profile_id: profile_id)
 
       session_token = Digest::SHA256.hexdigest(@access_token)
 
@@ -32,7 +33,7 @@ class AuthenticationController < ApplicationController
         @user.update(session_token: session_token)
       end
 
-      render :get_session_token, status: :ok, location: '/get_session_token'
+      render :get_session_token, status: :ok, location: '/auth'
 
     rescue FbGraph2::Exception::InvalidToken => e
       render json: { error: e.message }, status: :unauthorized

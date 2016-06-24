@@ -6,10 +6,13 @@ class AuthenticationControllerTest < ActionDispatch::IntegrationTest
     @access_token = 'abcdefg123456'
 
     @fb_user = stub()
+    @fb_picture = stub()
+
     @fb_user.stubs(:authenticate).returns(@fb_user)
+    @fb_user.stubs(:picture).returns(@fb_picture)
+    @fb_picture.stubs(:url).returns('profile_picture_url')
 
     FbGraph2::User.stubs(:new).returns(@fb_user)
-
 
     @auth_stub = stub()
     @auth_stub.stubs(:fb_exchange_token=).with(@access_token)
@@ -69,4 +72,15 @@ class AuthenticationControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "should store profile picture url from Facebook" do
+    @fb_user.stubs(:fetch).returns(@fb_user)
+
+    post '/auth', as: :json,
+         params: { auth: { id: 43,
+                           access_token: @access_token } }
+
+    user = User.find_by(profile_id: 43)
+
+    assert_equal 'profile_picture_url', user.picture
+  end
 end
