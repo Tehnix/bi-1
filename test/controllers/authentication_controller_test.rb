@@ -21,7 +21,7 @@ class AuthenticationControllerTest < ActionDispatch::IntegrationTest
   test "should get session token" do
     @fb_user.stubs(:fetch).returns(@fb_user)
 
-    post '/get_session_token', as: :json,
+    post '/auth', as: :json,
          params: { auth: { id: @martin.id,
                            access_token: @access_token } }
     assert_response :success
@@ -32,7 +32,7 @@ class AuthenticationControllerTest < ActionDispatch::IntegrationTest
     @fb_user.stubs(:fetch)
             .raises(FbGraph2::Exception::InvalidToken, 'derp')
 
-    post '/get_session_token', as: :json,
+    post '/auth', as: :json,
          params: { auth: { id: @martin.id,
                            access_token: @access_token } }
 
@@ -42,7 +42,7 @@ class AuthenticationControllerTest < ActionDispatch::IntegrationTest
   test "should create new user with id and session token" do
     @fb_user.stubs(:fetch).returns(@fb_user)
 
-    post '/get_session_token', as: :json,
+    post '/auth', as: :json,
          params: { auth: { id: 43,
                            access_token: @access_token } }
     user = User.find_by(profile_id: 43)
@@ -54,7 +54,7 @@ class AuthenticationControllerTest < ActionDispatch::IntegrationTest
   test "should throw bad request if id and access_token are missing" do
     @fb_user.stubs(:fetch).returns(@fb_user)
 
-    post '/get_session_token'
+    post '/auth'
 
     assert_response :bad_request
   end
@@ -62,7 +62,7 @@ class AuthenticationControllerTest < ActionDispatch::IntegrationTest
   test "should allow big profile integer id values" do
     @fb_user.stubs(:fetch).returns(@fb_user)
 
-    post '/get_session_token', as: :json,
+    post '/auth', as: :json,
          params: { auth: { id: 10206089230415618,
                            access_token: @access_token } }
 
