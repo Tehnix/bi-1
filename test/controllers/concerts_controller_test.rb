@@ -6,6 +6,7 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
     @christian = users(:christian)
 
     @taproot = concerts(:taproot)
+    @disturbed = concerts(:disturbed)
   end
 
   test "should list all concerts with attending friends through friendships" do
