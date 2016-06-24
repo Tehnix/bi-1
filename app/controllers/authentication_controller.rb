@@ -13,10 +13,10 @@ class AuthenticationController < ApplicationController
     profile_id = permitted_params[:id]
     @access_token = permitted_params[:access_token]
 
-    fb_user = FbGraph2::User.new(profile_id).authenticate(@access_token)
+    me = FbGraph2::User.new(profile_id).authenticate(@access_token)
     begin
       # The user is valid if the fetch command is successful
-      fb_user.fetch
+      me.fetch
 
       # Extend the short-term token to a long-term one
       auth = FbGraph2::Auth.new(ENV['FACEBOOK_APP_ID'],
@@ -24,8 +24,10 @@ class AuthenticationController < ApplicationController
       auth.fb_exchange_token = @access_token
       @access_token = auth.access_token!.to_s
 
-      @user = User.create_with(picture: fb_user.picture.url)
+      @user = User.create_with(picture: me.picture.url)
                   .find_or_create_by(profile_id: profile_id)
+
+      User.store_friends(@user, me)
 
       session_token = Digest::SHA256.hexdigest(@access_token)
 

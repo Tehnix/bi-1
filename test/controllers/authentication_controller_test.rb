@@ -12,6 +12,30 @@ class AuthenticationControllerTest < ActionDispatch::IntegrationTest
     @fb_user.stubs(:picture).returns(@fb_picture)
     @fb_picture.stubs(:url).returns('profile_picture_url')
 
+
+    user = stub()
+    user.stubs(:picture).returns(@fb_picture)
+    user.stubs(:id).returns(1)
+                   .then
+                   .returns(2)
+                   .then
+                   .returns(3)
+                   .then
+                   .returns(4)
+                   .then
+                   .returns(5)
+                   .then
+                   .returns(6)
+
+    user_array = stub()
+    user_array.stubs(:each).multiple_yields([user, user, user])
+    user_array.stubs(:next).returns(user_array)
+                           .then
+                           .returns([])
+    user_array.stubs(:empty?).returns(true).then.returns(false)
+
+    @fb_user.stubs(:friends).returns(user_array)
+
     FbGraph2::User.stubs(:new).returns(@fb_user)
 
     @auth_stub = stub()
@@ -82,5 +106,17 @@ class AuthenticationControllerTest < ActionDispatch::IntegrationTest
     user = User.find_by(profile_id: 43)
 
     assert_equal 'profile_picture_url', user.picture
+  end
+
+  test "should store friend associations during registration" do
+    @fb_user.stubs(:fetch).returns(@fb_user)
+
+    post '/auth', as: :json,
+         params: { auth: { id: 43,
+                           access_token: @access_token } }
+
+    stored_user = User.find_by(profile_id: 43)
+
+    assert_equal 6, stored_user.friends.length
   end
 end
