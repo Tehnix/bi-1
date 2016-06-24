@@ -22,14 +22,18 @@ class ConcertsController < ApplicationController
 
   # +1
   def look_for_individual
-    @interest.individual = true
-    @interest.save
+    unless @interest.nil?
+      @interest.individual = true
+      @interest.save
+    end
   end
 
   # +8
   def look_for_group
-    @interest.group = true
-    @concert.save
+    unless @interest.nil?
+      @interest.group = true
+      @interest.save
+    end
   end
 
   # `Like` a person (+1)
