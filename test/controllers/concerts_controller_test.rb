@@ -25,14 +25,20 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
     assert_equal @christian.profile_id, response.parsed_body['friend_attendees'][0]['profile_id']
   end
 
-  test "should be able to attend event" do
+  test "should be able to attend an event" do
     post "/concerts/#{@taproot.id}", as: :json, headers: {
            "Authorization" => "Token token=#{@martin.session_token}"
          }
 
     martin = User.find_by(profile_id: @martin.profile_id)
 
-    assert_equal @taproot.artist, martin.concerts[2].artist
+    assert_includes martin.concerts, @taproot
+
+    get "/concerts/#{@taproot.id}", as: :json, headers: {
+          "Authorization" => "Token token=#{@martin.session_token}"
+        }
+
+    assert_equal 3, response.parsed_body['num_attendees']
   end
 
   test "should not be able to set interest if user is not attending" do
