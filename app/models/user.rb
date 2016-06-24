@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  attr_accessor :friend
+
   has_and_belongs_to_many :chats
 
   has_many :interests
