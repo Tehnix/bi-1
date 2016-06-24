@@ -61,16 +61,21 @@ class ConcertsController < ApplicationController
   end
 
   def add_friend_and_attendees(concert)
-    attendees = concert.attendees
+    interests = concert.interests
 
-    concert.num_attendees = attendees.count
-    concert.friend_attendees =
-      attendees.where(profile_id: @current_user.friends
-                                               .pluck(:profile_id))
-               .pluck_to_hash(:profile_id)
+    concert.num_attendees = interests.count
+    concert.num_friend_attendees = 0
 
-    concert.looking_for = attendees.collect do |attendee|
-      attendee.interests.find_by(concert_id: @concert.id)
-    end.pluck_to_hash(:individual, :group)
+    user_friends = @current_user.friends
+    interests.each do |interest|
+      is_friend = user_friends.include? interest.user
+      interest.user.friend = is_friend
+
+      if is_friend
+        concert.num_friend_attendees += 1
+      end
+    end
+
+    @interests = interests.sort_by { |interest| interest.user.friend ? 0 : 1 }
   end
 end
