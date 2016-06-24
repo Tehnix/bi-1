@@ -16,8 +16,12 @@ class ConcertsController < ApplicationController
   end
 
   def attend
-    @concert.attendees << @current_user
-    @concert.save
+    attendees = @concert.attendees
+
+    unless attendees.include? @current_user
+      attendees << @current_user
+      @concert.save
+    end
   end
 
   # +1
