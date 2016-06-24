@@ -22,6 +22,8 @@ class ConcertsController < ApplicationController
       attendees << @current_user
       @concert.save
     end
+
+    render_concert
   end
 
   # +1
@@ -30,6 +32,8 @@ class ConcertsController < ApplicationController
       @interest.individual = true
       @interest.save
     end
+
+    render_concert
   end
 
   # +8
@@ -38,6 +42,8 @@ class ConcertsController < ApplicationController
       @interest.group = true
       @interest.save
     end
+
+    render_concert
   end
 
   # `Like` a person (+1)
@@ -58,6 +64,14 @@ class ConcertsController < ApplicationController
 
   def set_concert
     @concert = Concert.find(params[:id])
+  end
+
+  def render_concert
+    @interests = @concert.interests
+
+    add_friend_and_attendees(@concert)
+
+    render 'show'
   end
 
   def add_friend_and_attendees(concert)

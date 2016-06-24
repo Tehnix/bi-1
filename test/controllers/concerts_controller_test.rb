@@ -38,10 +38,6 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
 
     assert_includes martin.concerts, @taproot
 
-    get "/concerts/#{@taproot.id}", as: :json, headers: {
-          "Authorization" => "Token token=#{@martin.session_token}"
-        }
-
     assert_equal 3, response.parsed_body['num_attendees']
   end
 
@@ -64,10 +60,6 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
     assert interest.individual
     refute interest.group
 
-    get "/concerts/#{@disturbed.id}", as: :json, headers: {
-          "Authorization" => "Token token=#{@martin.session_token}"
-        }
-
     assert response.parsed_body['attendees'][1]['interest']['individual']
   end
 
@@ -82,14 +74,16 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
     refute interest.individual
     assert interest.group
 
-    get "/concerts/#{@disturbed.id}", as: :json, headers: {
-          "Authorization" => "Token token=#{@martin.session_token}"
-        }
-
     assert response.parsed_body['attendees'][1]['interest']['group']
   end
+
+  test "should supply a list of users that look to join a group for a concert" do
     post "/concerts/#{@taproot.id}/look_for_group", as: :json, headers: {
            "Authorization" => "Token token=#{@martin.session_token}"
+         }
+
+    post "/concerts/#{@taproot.id}/look_for_group", as: :json, headers: {
+           "Authorization" => "Token token=#{@christian.session_token}"
          }
   end
 end
