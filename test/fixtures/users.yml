@@ -1,23 +1,29 @@
 martin:
   profile_id: 123456
+  picture: 'martin_picture'
   session_token: martinsession
 
 christian:
   profile_id: 234561
+  picture: 'christian_picture'
   session_token: christiansession
 
 maiken:
   profile_id: 345612
+  picture: 'maiken_picture'
   session_token: maikensession
 
 line:
   profile_id: 456123
+  picture: 'line_picture'
   session_token: linesession
 
 mads:
   profile_id: 561234
+  picture: 'mads_picture'
   session_token: madssession
 
 benjamin:
   profile_id: 612345
+  picture: 'benjamin_picture'
   session_token: benjaminsession
