@@ -1,9 +1,9 @@
 class ConcertsController < ApplicationController
-  before_action :set_concert, only: [:show,
-                                     :attend,
+  before_action :set_concert, only: [:attend,
                                      :like, :unlike]
 
-  before_action :set_interest, only: [:unattend,
+  before_action :set_interest, only: [:show,
+                                      :unattend,
                                       :look_for_individual,
                                       :look_for_group]
 
@@ -13,12 +13,13 @@ class ConcertsController < ApplicationController
     @concerts = Concert.order(:start_time).all
 
     @concerts.each do |concert|
-      add_friend_and_attendees(concert)
+      set_interest(concert)
+      add_friend_and_attendees_to(concert)
     end
   end
 
   def show
-    add_friend_and_attendees(@concert)
+    add_friend_and_attendees_to(@concert)
   end
 
   def attend
@@ -26,7 +27,7 @@ class ConcertsController < ApplicationController
                              .find_or_create_by(concert_id: @concert.id,
                                                 user_id: @current_user.id)
 
-    add_friend_and_attendees(@concert)
+    add_friend_and_attendees_to(@concert)
 
     render 'show'
   end
@@ -34,8 +35,8 @@ class ConcertsController < ApplicationController
   def unattend
     unless @interest.nil?
       @interest.destroy
-
-      add_friend_and_attendees(@concert)
+      @interest = nil
+      add_friend_and_attendees_to(@concert)
 
       render 'show'
     else
@@ -49,7 +50,7 @@ class ConcertsController < ApplicationController
       @interest.individual = request.post?
       @interest.save
 
-      add_friend_and_attendees(@concert)
+      add_friend_and_attendees_to(@concert)
 
       render 'show'
     else
@@ -63,7 +64,7 @@ class ConcertsController < ApplicationController
       @interest.group = request.post?
       @interest.save
 
-      add_friend_and_attendees(@concert)
+      add_friend_and_attendees_to(@concert)
 
       render 'show'
     else
@@ -99,11 +100,19 @@ class ConcertsController < ApplicationController
     interest = interests.find_by(user_id: @current_user.id)
 
     # Return if neither of the two have shown interest in a concert
-    head(:bad_request) if @liked_interest.nil? || interest.nil?
+    return head(:bad_request) if @liked_interest.nil? || interest.nil?
+
+    like = interest.like
+    @likes_you = like.strangers.include? @current_user if like
   end
 
-  def set_interest
-    set_concert
+  def set_interest(concert = nil)
+    if concert.nil?
+      set_concert
+    else
+      @concert = concert
+    end
+
     @interest = @current_user.interests.find_by(concert_id: @concert.id)
   end
 
@@ -111,7 +120,7 @@ class ConcertsController < ApplicationController
     @concert = Concert.find(params[:id])
   end
 
-  def add_friend_and_attendees(concert)
+  def add_friend_and_attendees_to(concert)
     interests = concert.interests
 
     concert.num_attendees = interests.count
@@ -120,9 +129,15 @@ class ConcertsController < ApplicationController
     user_friends = @current_user.friends
     user_likes = @current_user.likes
 
-    unless @interest.nil?
+    attending = !@interest.nil?
+
+    if attending
       interests -= [@interest]
+    else
+      @interest = Interest.new
     end
+
+    @interest.attending = attending
 
     interests.each do |interest|
       is_friend = user_friends.include? interest.user

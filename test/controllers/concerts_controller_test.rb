@@ -46,6 +46,12 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
 
     assert response.parsed_body['attendees'][0]['friend']
     refute response.parsed_body['attendees'][1]['friend']
+
+    response.parsed_body['attendees'].each do |attendee|
+      refute attendee['picture'] == 'martin_picture'
+    end
+
+    refute response.parsed_body['interest']['attending']
   end
 
   test "should be able to attend and unattend an event" do
@@ -58,12 +64,14 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
     assert_includes martin.concerts, @taproot
 
     assert_equal 3, response.parsed_body['num_attendees']
+    assert response.parsed_body['interest']['attending']
 
     delete "/concerts/#{@taproot.id}", as: :json, headers: {
              "Authorization" => "Token token=#{@martin.session_token}"
            }
 
     assert_equal 2, response.parsed_body['num_attendees']
+    refute response.parsed_body['interest']['attending']
   end
 
   test "should not be able to set interest if user is not attending" do
@@ -85,13 +93,13 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
     assert interest.individual
     refute interest.group
 
-    assert response.parsed_body['me']['interest']['individual']
+    assert response.parsed_body['interest']['individual']
 
     delete "/concerts/#{@disturbed.id}/look_for_individual", as: :json, headers: {
            "Authorization" => "Token token=#{@martin.session_token}"
          }
 
-    refute response.parsed_body['me']['interest']['individual']
+    refute response.parsed_body['interest']['individual']
   end
 
   test "should be able to look for a group to join for a concert" do
@@ -105,13 +113,13 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
     refute interest.individual
     assert interest.group
 
-    assert response.parsed_body['me']['interest']['group']
+    assert response.parsed_body['interest']['group']
 
     delete "/concerts/#{@disturbed.id}/look_for_group", as: :json, headers: {
            "Authorization" => "Token token=#{@martin.session_token}"
          }
 
-    refute response.parsed_body['me']['interest']['group']
+    refute response.parsed_body['interest']['group']
   end
 
   test "should throw bad request if user has not shown interest in specified concert" do
@@ -127,8 +135,18 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
            "Authorization" => "Token token=#{@martin.session_token}"
          }
 
-    friend = User.find(@christian.id)
-    assert_equal 1, friend.likes.length
+    friend_christian = User.find(@christian.id)
+    assert_equal 1, friend_christian.likes.length
+
+    post "/concerts/#{@disturbed.id}/like/#{@martin.profile_id}", as: :json, headers: {
+           "Authorization" => "Token token=#{@christian.session_token}"
+         }
+
+    friend_martin = User.find(@martin.id)
+    assert_equal 1, friend_martin.likes.length
+
+    # Martin likes Christian <3
+    assert response.parsed_body['attendee']['likes_you']
 
     delete "/concerts/#{@disturbed.id}/like/#{@christian.profile_id}", as: :json, headers: {
              "Authorization" => "Token token=#{@martin.session_token}"

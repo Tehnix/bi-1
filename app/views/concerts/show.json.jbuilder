@@ -13,11 +13,6 @@ json.attendees(@interests) do |interest|
   end
 end
 
-unless @interest.nil?
-  json.me do
-    json.extract! @current_user, :likes_you
-    json.interest do
-      json.extract! @interest, :individual, :group
-    end
-  end
+json.interest do
+  json.extract! @interest, :individual, :group, :attending
 end
