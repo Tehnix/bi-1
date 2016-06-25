@@ -5,7 +5,7 @@
 
 # server 'example.com', user: 'deploy', roles: %w{app db web}, my_property: :my_value
 set :user, 'rfplusone'
-server 'rfplusone.dk', user: fetch(:user), roles: %w{app}
+server 'rfplusone.dk', user: fetch(:user), roles: %w{app db}
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 
 set :puma_threads,    [4, 10]

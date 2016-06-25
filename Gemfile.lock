@@ -56,6 +56,9 @@ GEM
     capistrano-file-permissions (1.0.0)
       capistrano (~> 3.0)
     capistrano-harrow (0.5.2)
+    capistrano-rails (1.1.7)
+      capistrano (~> 3.1)
+      capistrano-bundler (~> 1.1)
     capistrano-rbenv (2.0.4)
       capistrano (~> 3.1)
       sshkit (~> 1.3)
@@ -186,6 +189,7 @@ DEPENDENCIES
   capistrano (~> 3.4)
   capistrano-bundler
   capistrano-file-permissions
+  capistrano-rails
   capistrano-rbenv
   capistrano3-puma
   fb_graph2
