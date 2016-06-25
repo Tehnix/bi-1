@@ -4,6 +4,7 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @martin = users(:martin)
     @christian = users(:christian)
+    @mads = users(:mads)
 
     @taproot = concerts(:taproot)
     @disturbed = concerts(:disturbed)
