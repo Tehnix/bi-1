@@ -25,7 +25,7 @@ class AuthenticationController < ApplicationController
       @access_token = auth.access_token!.to_s
 
       picture_url = me.picture.url
-      @user = User.create_with(picture: picture_url)
+      @user = User.create_with(picture: picture_url, name: me.name)
                   .find_or_create_by(profile_id: profile_id)
 
       User.store_friends(@user, me)

@@ -10,6 +10,7 @@ class AuthenticationControllerTest < ActionDispatch::IntegrationTest
 
     @fb_user.stubs(:authenticate).returns(@fb_user)
     @fb_user.stubs(:picture).returns(@fb_picture)
+    @fb_user.stubs(:name).returns(@martin.name)
     @fb_picture.stubs(:url).returns('profile_picture_url')
 
 
@@ -66,7 +67,7 @@ class AuthenticationControllerTest < ActionDispatch::IntegrationTest
     assert_response :unauthorized
   end
 
-  test "should create new user with id and session token" do
+  test "should create new user with id, name and session token" do
     @fb_user.stubs(:fetch).returns(@fb_user)
 
     post '/auth', as: :json,
@@ -76,6 +77,7 @@ class AuthenticationControllerTest < ActionDispatch::IntegrationTest
 
     assert_instance_of User, user
     assert_match /^[a-z0-9]{64}$/, user.session_token
+    assert_equal @martin.name, user.name
   end
 
   test "should throw bad request if id and access_token are missing" do
