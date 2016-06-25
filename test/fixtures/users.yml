@@ -1,6 +1,7 @@
 martin:
   profile_id: 123456
   picture: 'martin_picture'
+  likes: maiken, line
   session_token: martinsession
 
 christian:

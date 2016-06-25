@@ -1,14 +1,11 @@
 class User < ApplicationRecord
-  attr_accessor :friend
+  attr_accessor :friend, :likes_you
 
   has_and_belongs_to_many :chats
 
   has_many :interests
   has_many :concerts, through: :interests
-
-  # +1/like a fellow
-  has_many :likes
-  has_many :strangers, through: :likes
+  has_many :likes, through: :interests
 
   has_many :friendships
   has_many :friends, through: :friendships

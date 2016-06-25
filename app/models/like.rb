@@ -1,4 +1,4 @@
 class Like < ApplicationRecord
-  belongs_to :user
-  belongs_to :stranger, class_name: 'User'
+  has_many :interests
+  has_many :strangers, through: :interests, class_name: 'User'
 end
