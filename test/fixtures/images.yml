@@ -1,0 +1,29 @@
+image_disturbed:
+  concert: disturbed
+  url: placeholder
+  image_type: image
+
+image_taproot:
+  concert: taproot
+  url: placeholder
+  image_type: image
+
+image_above_and_beyond:
+  concert: above_and_beyond
+  url: placeholder
+  image_type: image
+
+thumb_disturbed:
+  concert: disturbed
+  url: placeholder
+  image_type: thumb
+
+thumb_taproot:
+  concert: taproot
+  url: placeholder
+  image_type: thumb
+
+thumb_above_and_beyond:
+  concert: above_and_beyond
+  url: placeholder
+  image_type: thumb
