@@ -2,7 +2,7 @@
 
 ## Get session token
 
-1. Send a post request to `/auth` with the following JSON object
+1. Send a POST request to `/auth` with the following JSON object
    ```javascript
    {
        'auth': {
@@ -13,11 +13,7 @@
    ```
 
 2. Store the returned extended access- and session token
-3. Add `Authorization: Token=SESSION_TOKEN` to future HTTP requests
-
-## To do
-- Users has a list of plus ones and plus 8s -> has_many :users, through: :plusses
-- Concert has individual attendees and group attendees
+3. Add `Authorization: Token token=SESSION_TOKEN` to future HTTP requests
 
 ## End-points
 
