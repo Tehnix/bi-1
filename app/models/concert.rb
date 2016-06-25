@@ -7,6 +7,8 @@ class Concert < ApplicationRecord
   has_many :interests
   has_many :attendees, through: :interests, class_name: 'User', source: :user, foreign_key: 'attendant_id'
 
+  has_many :images
+
   class << self
 
     def update_schedule
@@ -22,10 +24,26 @@ class Concert < ApplicationRecord
         venue = artist['gigs'][0]['stage']['name']
         artist_name = artist['displayName']
 
+        placeholder = {'url' => '',
+                       'width' => '',
+                       'height' => ''}
+
+        image = artist['image'] || placeholder
+        thumb = artist['thumb'] || placeholder
+
         @concert = Concert.create_with(start_time: start_time,
                                        end_time: end_time,
                                        venue: venue)
                           .find_or_create_by(artist: artist_name)
+        Image.create_with(url: image['url'],
+                          height: image['height'],
+                          width: image['width'])
+             .find_or_create_by(concert_id: @concert.id, image_type: 'image')
+        Image.create_with(url: thumb['url'],
+                          height: thumb['height'],
+                          width: thumb['width'])
+             .find_or_create_by(concert_id: @concert.id, image_type: 'thumb')
+
         @concert.with_lock do
           # If any of the attributes have changed simply force an update
           if @concert.start_time != start_time or

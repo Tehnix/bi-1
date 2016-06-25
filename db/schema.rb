@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160624224449) do
+ActiveRecord::Schema.define(version: 20160625121811) do
 
   create_table "chats", force: :cascade do |t|
     t.string   "type"
@@ -46,20 +46,31 @@ ActiveRecord::Schema.define(version: 20160624224449) do
     t.index ["user_id"], name: "index_friendships_on_user_id"
   end
 
+  create_table "images", force: :cascade do |t|
+    t.string  "url"
+    t.string  "image_type"
+    t.integer "width"
+    t.integer "height"
+    t.integer "concert_id"
+    t.index ["concert_id"], name: "index_images_on_concert_id"
+  end
+
   create_table "interests", force: :cascade do |t|
     t.integer "concert_id"
     t.integer "user_id"
     t.boolean "individual"
     t.boolean "group"
+    t.integer "like_id"
     t.index ["concert_id"], name: "index_interests_on_concert_id"
+    t.index ["like_id"], name: "index_interests_on_like_id"
     t.index ["user_id"], name: "index_interests_on_user_id"
   end
 
   create_table "likes", force: :cascade do |t|
-    t.integer "user_id"
     t.integer "stranger_id"
+    t.integer "interest_id"
+    t.index ["interest_id"], name: "index_likes_on_interest_id"
     t.index ["stranger_id"], name: "index_likes_on_stranger_id"
-    t.index ["user_id"], name: "index_likes_on_user_id"
   end
 
   create_table "messages", force: :cascade do |t|
