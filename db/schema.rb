@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160624135028) do
+ActiveRecord::Schema.define(version: 20160624224449) do
 
   create_table "chats", force: :cascade do |t|
     t.string   "type"
@@ -55,6 +55,13 @@ ActiveRecord::Schema.define(version: 20160624135028) do
     t.index ["user_id"], name: "index_interests_on_user_id"
   end
 
+  create_table "likes", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "stranger_id"
+    t.index ["stranger_id"], name: "index_likes_on_stranger_id"
+    t.index ["user_id"], name: "index_likes_on_user_id"
+  end
+
   create_table "messages", force: :cascade do |t|
     t.string   "author"
     t.datetime "date"
@@ -74,8 +81,10 @@ ActiveRecord::Schema.define(version: 20160624135028) do
     t.integer  "profile_id",    limit: 8
     t.integer  "friendship_id"
     t.string   "picture"
+    t.integer  "like_id"
     t.index ["chats_id"], name: "index_users_on_chats_id"
     t.index ["friendship_id"], name: "index_users_on_friendship_id"
+    t.index ["like_id"], name: "index_users_on_like_id"
     t.index ["messages_id"], name: "index_users_on_messages_id"
   end
 

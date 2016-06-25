@@ -77,13 +77,12 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
     assert response.parsed_body['attendees'][1]['interest']['group']
   end
 
-  test "should supply a list of users that look to join a group for a concert" do
-    post "/concerts/#{@taproot.id}/look_for_group", as: :json, headers: {
+  test "should allow user to show interest in a friend or stranger" do
+    post "/concerts/#{@taproot.id}/show_interest/#{@mads.profile_id}", as: :json, headers: {
            "Authorization" => "Token token=#{@martin.session_token}"
          }
 
-    post "/concerts/#{@taproot.id}/look_for_group", as: :json, headers: {
-           "Authorization" => "Token token=#{@christian.session_token}"
-         }
+    friend = User.find(@mads)
+    friend.likes
   end
 end

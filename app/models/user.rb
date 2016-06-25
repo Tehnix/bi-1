@@ -6,7 +6,9 @@ class User < ApplicationRecord
   has_many :interests
   has_many :concerts, through: :interests
 
-  has_many :users, through: :connections
+  # +1/like a fellow
+  has_many :likes
+  has_many :strangers, through: :likes
 
   has_many :friendships
   has_many :friends, through: :friendships
