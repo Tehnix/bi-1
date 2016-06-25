@@ -28,11 +28,11 @@ class AuthenticationControllerTest < ActionDispatch::IntegrationTest
                    .returns(6)
 
     user_array = stub()
-    user_array.stubs(:each).multiple_yields([user, user, user])
+    user_array.stubs(:each).multiple_yields(user, user, user)
     user_array.stubs(:next).returns(user_array)
                            .then
                            .returns([])
-    user_array.stubs(:empty?).returns(true).then.returns(false)
+    user_array.stubs(:empty?).returns(false).then.returns(true)
 
     @fb_user.stubs(:friends).returns(user_array)
 

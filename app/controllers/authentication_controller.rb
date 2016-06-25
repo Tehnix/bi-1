@@ -32,8 +32,10 @@ class AuthenticationController < ApplicationController
       session_token = Digest::SHA256.hexdigest(@access_token)
 
       if @user.session_token != session_token
-        @user.update(session_token: session_token)
+        @user.session_token = session_token
       end
+
+      @user.save
 
       render :get_session_token, status: :ok, location: '/auth'
 
