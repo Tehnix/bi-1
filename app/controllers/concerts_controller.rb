@@ -1,10 +1,17 @@
 class ConcertsController < ApplicationController
-  before_action :set_concert, only: [:show, :attend, :show_interest]
+  before_action :set_concert, only: [:show,
+                                     :attend, :unattend,
+                                     :like, :unlike]
+
   before_action :set_interest, only: [:look_for_individual,
-                                      :look_for_group]
+                                      :unlook_for_individual,
+                                      :look_for_group,
+                                      :unlook_for_group]
+
+  before_action :validate_interest, only: [:like, :unlike]
 
   def index
-    @concerts = Concert.all
+    @concerts = Concert.order(:start_time).all
 
     @concerts.each do |concert|
       add_friend_and_attendees(concert)
@@ -26,10 +33,28 @@ class ConcertsController < ApplicationController
     render_concert
   end
 
+  def unattend
+    interest = @concert.interests.find_by(user_id: @current_user.id)
+    unless interest.nil?
+      interest.destroy
+    end
+
+    render_concert
+  end
+
   # +1
   def look_for_individual
     unless @interest.nil?
       @interest.individual = true
+      @interest.save
+    end
+
+    render_concert
+  end
+
+  def unlook_for_individual
+    unless @interest.nil?
+      @interest.individual = false
       @interest.save
     end
 
@@ -46,16 +71,40 @@ class ConcertsController < ApplicationController
     render_concert
   end
 
-  # `Like` a person (+1)
-  def show_interest
-    @user = User.find(params[:profile_id])
+  def unlook_for_group
+    unless @interest.nil?
+      @interest.group = false
+      @interest.save
+    end
 
-    likes = @user.interests.find_by(concert_id: @concert.id).likes
-    likes << @current_user
-    likes.save
+    render_concert
+  end
+
+  def like
+    like = Like.new(stranger_id: @current_user.id)
+    like.interests << @liked_interest
+    like.save
+  end
+
+  def unlike
+    @liked_interest.like.destroy
   end
 
   private
+
+  # @concert is available. Luck?
+  def validate_interest
+    liked_user = User.find_by(profile_id: params[:profile_id])
+
+    interests = Interest.where(concert_id: @concert.id)
+                        .where(user_id: [@current_user.id, liked_user.id])
+
+    @liked_interest = interests.find_by(user_id: liked_user.id)
+    interest = interests.find_by(user_id: @current_user.id)
+
+    # Return if neither of the two have shown interest in a concert
+    return head(:bad_request) if @liked_interest.nil? || interest.nil?
+  end
 
   def set_interest
     set_concert
@@ -81,9 +130,11 @@ class ConcertsController < ApplicationController
     concert.num_friend_attendees = 0
 
     user_friends = @current_user.friends
+    user_likes = @current_user.likes
     interests.each do |interest|
       is_friend = user_friends.include? interest.user
       interest.user.friend = is_friend
+      interest.user.likes_you = user_likes.include? interest.like
 
       if is_friend
         concert.num_friend_attendees += 1
