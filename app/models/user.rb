@@ -20,16 +20,18 @@ class User < ApplicationRecord
   class << self
     def store_friends(current_user, me)
       friends = me.friends
+      friend_users = []
       loop do
         friends.each do |friend|
-          current_user.friends << User.create_with(picture: friend.picture.url)
-                                      .find_or_create_by(profile_id: friend.id)
+          friend_users << User.create_with(picture: friend.picture.url)
+                              .find_or_create_by(profile_id: friend.id)
         end
 
         friends = friends.next
 
         break if friends.empty?
       end
+      current_user.friends = friend_users
     end
   end
 end
