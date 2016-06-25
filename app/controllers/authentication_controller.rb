@@ -24,7 +24,8 @@ class AuthenticationController < ApplicationController
       auth.fb_exchange_token = @access_token
       @access_token = auth.access_token!.to_s
 
-      @user = User.create_with(picture: me.picture.url)
+      picture_url = me.picture.url
+      @user = User.create_with(picture: picture_url)
                   .find_or_create_by(profile_id: profile_id)
 
       User.store_friends(@user, me)
@@ -33,6 +34,7 @@ class AuthenticationController < ApplicationController
 
       if @user.session_token != session_token
         @user.session_token = session_token
+        @user.picture = picture_url
       end
 
       @user.save
