@@ -85,13 +85,13 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
     assert interest.individual
     refute interest.group
 
-    assert response.parsed_body['attendees'][1]['interest']['individual']
+    assert response.parsed_body['me']['interest']['individual']
 
     delete "/concerts/#{@disturbed.id}/look_for_individual", as: :json, headers: {
            "Authorization" => "Token token=#{@martin.session_token}"
          }
 
-    refute response.parsed_body['attendees'][1]['interest']['individual']
+    refute response.parsed_body['me']['interest']['individual']
   end
 
   test "should be able to look for a group to join for a concert" do
@@ -105,13 +105,13 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
     refute interest.individual
     assert interest.group
 
-    assert response.parsed_body['attendees'][1]['interest']['group']
+    assert response.parsed_body['me']['interest']['group']
 
     delete "/concerts/#{@disturbed.id}/look_for_group", as: :json, headers: {
            "Authorization" => "Token token=#{@martin.session_token}"
          }
 
-    refute response.parsed_body['attendees'][1]['interest']['group']
+    refute response.parsed_body['me']['interest']['group']
   end
 
   test "should throw bad request if user has not shown interest in specified concert" do

@@ -10,12 +10,12 @@ Rails.application.routes.draw do
   delete '/concerts/:id', to: 'concerts#unattend'
 
   post '/concerts/:id/look_for_individual', to: 'concerts#look_for_individual'
-  delete '/concerts/:id/look_for_individual', to: 'concerts#unlook_for_individual'
+  delete '/concerts/:id/look_for_individual', to: 'concerts#look_for_individual'
   post '/concerts/:id/look_for_group', to: 'concerts#look_for_group'
-  delete '/concerts/:id/look_for_group', to: 'concerts#unlook_for_group'
+  delete '/concerts/:id/look_for_group', to: 'concerts#look_for_group'
 
   post '/concerts/:id/like/:profile_id', to: 'concerts#like'
-  delete '/concerts/:id/like/:profile_id', to: 'concerts#unlike'
+  delete '/concerts/:id/like/:profile_id', to: 'concerts#like'
 
   resources :chats do
     resources :messages

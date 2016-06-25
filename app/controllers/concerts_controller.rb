@@ -1,12 +1,11 @@
 class ConcertsController < ApplicationController
   before_action :set_concert, only: [:show,
-                                     :attend, :unattend,
+                                     :attend,
                                      :like, :unlike]
 
-  before_action :set_interest, only: [:look_for_individual,
-                                      :unlook_for_individual,
-                                      :look_for_group,
-                                      :unlook_for_group]
+  before_action :set_interest, only: [:unattend,
+                                      :look_for_individual,
+                                      :look_for_group]
 
   before_action :validate_interest, only: [:like, :unlike]
 
@@ -23,71 +22,68 @@ class ConcertsController < ApplicationController
   end
 
   def attend
-    attendees = @concert.attendees
+    @interest = @current_user.interests
+                             .find_or_create_by(concert_id: @concert.id,
+                                                user_id: @current_user.id)
 
-    unless attendees.include? @current_user
-      attendees << @current_user
-      @concert.save
-    end
+    add_friend_and_attendees(@concert)
 
-    render_concert
+    render 'show'
   end
 
   def unattend
-    interest = @concert.interests.find_by(user_id: @current_user.id)
-    unless interest.nil?
-      interest.destroy
-    end
+    unless @interest.nil?
+      @interest.destroy
 
-    render_concert
+      add_friend_and_attendees(@concert)
+
+      render 'show'
+    else
+      head(:bad_request)
+    end
   end
 
   # +1
   def look_for_individual
     unless @interest.nil?
-      @interest.individual = true
+      @interest.individual = request.post?
       @interest.save
+
+      add_friend_and_attendees(@concert)
+
+      render 'show'
+    else
+      head(:bad_request)
     end
-
-    render_concert
-  end
-
-  def unlook_for_individual
-    unless @interest.nil?
-      @interest.individual = false
-      @interest.save
-    end
-
-    render_concert
   end
 
   # +8
   def look_for_group
     unless @interest.nil?
-      @interest.group = true
+      @interest.group = request.post?
       @interest.save
+
+      add_friend_and_attendees(@concert)
+
+      render 'show'
+    else
+      head(:bad_request)
     end
-
-    render_concert
-  end
-
-  def unlook_for_group
-    unless @interest.nil?
-      @interest.group = false
-      @interest.save
-    end
-
-    render_concert
   end
 
   def like
-    like = Like.new(stranger_id: @current_user.id)
-    like.interests << @liked_interest
-    like.save
-  end
+    @user = @liked_interest.user
+    @mutual_concerts = (@user.concerts & @current_user.concerts).length
 
-  def unlike
-    @liked_interest.like.destroy
+    if request.post?
+      like = Like.new(stranger_id: @current_user.id)
+      like.interests << @liked_interest
+      like.save
+    else
+      @liked_interest.like.destroy
+    end
+
+    render 'like'
   end
 
   private
@@ -103,7 +99,7 @@ class ConcertsController < ApplicationController
     interest = interests.find_by(user_id: @current_user.id)
 
     # Return if neither of the two have shown interest in a concert
-    return head(:bad_request) if @liked_interest.nil? || interest.nil?
+    head(:bad_request) if @liked_interest.nil? || interest.nil?
   end
 
   def set_interest
@@ -115,14 +111,6 @@ class ConcertsController < ApplicationController
     @concert = Concert.find(params[:id])
   end
 
-  def render_concert
-    @interests = @concert.interests
-
-    add_friend_and_attendees(@concert)
-
-    render 'show'
-  end
-
   def add_friend_and_attendees(concert)
     interests = concert.interests
 
@@ -131,8 +119,14 @@ class ConcertsController < ApplicationController
 
     user_friends = @current_user.friends
     user_likes = @current_user.likes
+
+    unless @interest.nil?
+      interests -= [@interest]
+    end
+
     interests.each do |interest|
       is_friend = user_friends.include? interest.user
+      interest.user.mutual_concerts = (interest.user.concerts & @current_user.concerts).length
       interest.user.friend = is_friend
       interest.user.likes_you = user_likes.include? interest.like
 
