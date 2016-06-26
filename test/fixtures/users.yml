@@ -2,7 +2,6 @@ martin:
   profile_id: 123456
   name: Martin Jesper Low Madsen
   picture: 'martin_picture'
-  likes: maiken, line
   session_token: martinsession
 
 christian:

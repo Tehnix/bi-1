@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160626031818) do
+ActiveRecord::Schema.define(version: 20160626093732) do
 
   create_table "chat_connections", force: :cascade do |t|
     t.integer "user_id"
@@ -64,10 +64,10 @@ ActiveRecord::Schema.define(version: 20160626031818) do
   end
 
   create_table "likes", force: :cascade do |t|
-    t.integer "stranger_id"
+    t.integer "owner_id"
     t.integer "interest_id"
     t.index ["interest_id"], name: "index_likes_on_interest_id"
-    t.index ["stranger_id"], name: "index_likes_on_stranger_id"
+    t.index ["owner_id"], name: "index_likes_on_owner_id"
   end
 
   create_table "messages", force: :cascade do |t|

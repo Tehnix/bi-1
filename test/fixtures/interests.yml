@@ -1,0 +1,27 @@
+disturbed_interest_mads:
+  concert: disturbed
+  user: mads
+
+disturbed_interest_martin:
+  concert: disturbed
+  user: martin
+
+disturbed_interest_christian:
+  concert: disturbed
+  user: christian
+
+taproot_interest_christian:
+  concert: taproot
+  user: christian
+
+taproot_interest_line:
+  concert: taproot
+  user: line
+
+ab_interest_martin:
+  concert: above_and_beyond
+  user: martin
+
+ab_interest_benjamin:
+  concert: above_and_beyond
+  user: benjamin

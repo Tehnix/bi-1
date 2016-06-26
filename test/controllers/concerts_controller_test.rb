@@ -54,6 +54,16 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
     refute response.parsed_body['interest']['attending']
   end
 
+  test "should show if an attendee likes the current user" do
+    get "/concerts/#{@disturbed.id}", as: :json, headers: {
+          "Authorization" => "Token token=#{@martin.session_token}"
+        }
+
+    response.parsed_body['attendees'].each do |attendee|
+      assert attendee['likes_you'] if attendee['picture'] == 'mads_picture'
+    end
+  end
+
   test "should be able to attend and unattend an event" do
     post "/concerts/#{@taproot.id}", as: :json, headers: {
            "Authorization" => "Token token=#{@martin.session_token}"
@@ -136,14 +146,16 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
          }
 
     friend_christian = User.find(@christian.id)
-    assert_equal 1, friend_christian.likes.length
+    assert_equal 1, friend_christian.interests
+                                    .find_by(concert_id: @disturbed).likes.length
 
     post "/concerts/#{@disturbed.id}/like/#{@martin.profile_id}", as: :json, headers: {
            "Authorization" => "Token token=#{@christian.session_token}"
          }
 
     friend_martin = User.find(@martin.id)
-    assert_equal 1, friend_martin.likes.length
+    assert_equal 1, friend_martin.interests
+                                 .find_by(concert_id: @disturbed).likes.length
 
     # Martin likes Christian <3
     assert response.parsed_body['attendee']['likes_you']
@@ -153,6 +165,10 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
            }
 
     friend = User.find(@christian.id)
-    assert_equal 0, friend.likes.length
+    assert_equal 0, friend.interests
+                          .find_by(concert_id: @disturbed).likes.length
+
+    # Martin doesn't like Christian :(
+    refute response.parsed_body['attendee']['likes_you']
   end
 end

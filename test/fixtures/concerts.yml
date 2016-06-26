@@ -2,19 +2,16 @@ disturbed:
   artist: Disturbed
   start_time: 2016-06-14 11:16:16
   end_time: 2016-06-15 11:36:16
-  attendees: martin, christian, mads
   venue: Orange Stage
 
 taproot:
   artist: Taproot
   start_time: 2016-06-15 11:16:16
   end_time: 2016-06-15 12:16:16
-  attendees: christian, line
   venue: Apollo
 
 above_and_beyond:
   artist: Above & Beyond
   start_time: 2016-06-16 11:16:16
   end_time: 2016-06-15 12:16:16
-  attendees: martin, benjamin
   venue: Camp Croquet

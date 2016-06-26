@@ -77,12 +77,14 @@ class ConcertsController < ApplicationController
     @mutual_concerts = (@user.concerts & @current_user.concerts).length
 
     if request.post?
-      like = Like.new(stranger_id: @current_user.id)
-      like.interests << @liked_interest
+      like = Like.new(owner_id: @current_user,
+                      interest_id: @liked_interest)
       like.save
     else
-      @liked_interest.like.destroy
+      @liked_interest.likes.find_by(owner_id: @current_user).destroy
     end
+
+    @likes_you = !(@user.likes & @my_interest.likes).empty?
 
     render 'like'
   end
@@ -97,13 +99,10 @@ class ConcertsController < ApplicationController
                         .where(user_id: [@current_user.id, liked_user.id])
 
     @liked_interest = interests.find_by(user_id: liked_user.id)
-    interest = interests.find_by(user_id: @current_user.id)
+    @my_interest = interests.find_by(user_id: @current_user.id)
 
     # Return if neither of the two have shown interest in a concert
-    return head(:bad_request) if @liked_interest.nil? || interest.nil?
-
-    like = interest.like
-    @likes_you = like.strangers.include? @current_user if like
+    return head(:bad_request) if @liked_interest.nil? || @my_interest.nil?
   end
 
   def set_interest(concert = nil)
@@ -127,7 +126,6 @@ class ConcertsController < ApplicationController
     concert.num_friend_attendees = 0
 
     user_friends = @current_user.friends
-    user_likes = @current_user.likes
 
     attending = !@interest.nil?
 
@@ -137,13 +135,16 @@ class ConcertsController < ApplicationController
       @interest = Interest.new
     end
 
+    # Like.joins(:interest).where('interests.concert_id = ?', Concert.second).where('interests.user_id = ?', User.last)
+    my_interest_likes = @interest.likes
+
     @interest.attending = attending
 
     interests.each do |interest|
       is_friend = user_friends.include? interest.user
       interest.user.mutual_concerts = (interest.user.concerts & @current_user.concerts).length
       interest.user.friend = is_friend
-      interest.user.likes_you = user_likes.include? interest.like
+      interest.user.likes_you = !(interest.user.likes & my_interest_likes).empty?
 
       if is_friend
         concert.num_friend_attendees += 1
