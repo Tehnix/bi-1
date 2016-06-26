@@ -8,6 +8,8 @@ class ChatsController < ApplicationController
     @chats.each do |chat|
       chat.recent_message = chat.messages.order('date DESC')
                                          .limit(1).first
+      chat.excluded_participants = chat.participants
+      chat.excluded_participants -= [@current_user]
     end
   end
 

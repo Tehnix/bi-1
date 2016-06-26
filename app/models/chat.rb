@@ -1,5 +1,6 @@
 class Chat < ApplicationRecord
-  attr_accessor :recent_message, :unread_count
+  attr_accessor :recent_message, :excluded_participants,
+                :unread_count
 
   has_many :chat_connections
   has_many :participants, through: :chat_connections, class_name: 'User',

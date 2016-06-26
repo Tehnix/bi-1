@@ -21,6 +21,11 @@ class ChatsControllerTest < ActionDispatch::IntegrationTest
     json = response.parsed_body
 
     assert_equal 3, json.length
+
+    json[0]['participants'].each do |participant|
+      refute participant['picture'] == 'martin_picture'
+    end
+
     assert_equal @disturbed_chat.id, json[0]['id']
     assert_equal @mads.name, json[0]['recent_message']['author']
     assert_equal @benjamin.name, json[1]['recent_message']['author']

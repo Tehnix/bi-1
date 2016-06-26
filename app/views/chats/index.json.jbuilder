@@ -1,6 +1,6 @@
 json.array!(@chats) do |chat|
   json.extract! chat, :id, :concert_id
-  json.participants chat.participants do |participant|
+  json.participants chat.excluded_participants do |participant|
     json.extract! participant, :id, :name, :picture
   end
 
