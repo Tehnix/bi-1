@@ -35,6 +35,7 @@ class AuthenticationController < ApplicationController
       if @user.session_token != session_token
         @user.session_token = session_token
         @user.picture = picture_url
+        @user.name = me.name
       end
 
       @user.save
