@@ -45,11 +45,9 @@ class ChatsController < ApplicationController
         @chat = Chat.create(concert_id: concert_id)
         @chat.participants << target_user
         @chat.participants << @current_user
-
-        render 'show'
-      else
-        head(:bad_request)
       end
+
+      render 'show'
     else
       head(:bad_request)
     end
