@@ -4,7 +4,8 @@ class MessagesController < ApplicationController
   # GET /messages
   # GET /messages.json
   def index
-    @messages = Message.all
+    @messages = Chat.find(params[:chat_id]).messages
+    render :index
   end
 
   # GET /messages/1

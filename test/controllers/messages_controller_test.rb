@@ -1,14 +1,25 @@
 require 'test_helper'
 
 class MessagesControllerTest < ActionDispatch::IntegrationTest
-  # setup do
-  #   @abmsg1_martin = messages(:above_beyond_msg_1_martin)
-  # end
+  setup do
+    @above_beyond_chat = chats(:above_beyond_chat)
+    @abmsg1_martin = messages(:above_beyond_msg_1_martin)
+    @martin = users(:martin)
+  end
 
-  # test "should get index of all messages in a chat" do
-  #   get messages_url
-  #   assert_response :success
-  # end
+  test "should get index of all messages in a chat" do
+    get chat_messages_url(@above_beyond_chat), as: :json, headers: {
+          "Authorization" => "Token token=#{@martin.session_token}"
+        }
+
+    json = response.parsed_body
+
+    msg1 = json.first
+
+
+
+    assert_response :success
+  end
 
   # test "should create message" do
   #   assert_difference('Message.count') do
