@@ -7,7 +7,7 @@ end
 
 json.attendees(@interests) do |interest|
   json.extract! interest.user, :profile_id, :name, :picture, :friend,
-                :likes_you, :mutual_concerts
+                :likes_you, :you_like, :mutual_concerts
   json.interest do
     json.extract! interest, :individual, :group
   end

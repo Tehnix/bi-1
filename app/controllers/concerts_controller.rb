@@ -84,6 +84,7 @@ class ConcertsController < ApplicationController
       @liked_interest.likes.find_by(owner_id: @current_user).destroy
     end
 
+    @you_like = !like.nil?
     @likes_you = !(@user.likes & @my_interest.likes).empty?
 
     render 'like'
@@ -145,6 +146,7 @@ class ConcertsController < ApplicationController
       interest.user.mutual_concerts = (interest.user.concerts & @current_user.concerts).length
       interest.user.friend = is_friend
       interest.user.likes_you = !(interest.user.likes & my_interest_likes).empty?
+      interest.user.you_like = !@current_user.likes.find(interest.likes.ids).empty?
 
       if is_friend
         concert.num_friend_attendees += 1

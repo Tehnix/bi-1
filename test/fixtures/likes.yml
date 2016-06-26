@@ -6,6 +6,10 @@ martin_like_christian_disturbed:
   owner: martin
   interest: disturbed_interest_christian
 
+martin_like_christian_taproot:
+  owner: martin
+  interest: taproot_interest_christian
+
 mads_like_martin_disturbed:
   owner: mads
   interest: disturbed_interest_martin

@@ -49,6 +49,7 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
 
     response.parsed_body['attendees'].each do |attendee|
       refute attendee['picture'] == 'martin_picture'
+      assert attendee['you_like'] if attendee['picture'] == 'christian_picture'
     end
 
     refute response.parsed_body['interest']['attending']
