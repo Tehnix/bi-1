@@ -15,6 +15,10 @@ class ChatsController < ApplicationController
 
   def show
     @chat = @current_user.chats.find(params[:id])
+    @messages = @chat.messages
+    @messages.each do |message|
+      message.position = message.author.name == @current_user.name ? 'right' : 'left'
+    end
   end
 
   def create

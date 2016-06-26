@@ -7,7 +7,8 @@ json.array!(@chats) do |chat|
   unless chat.recent_message.nil?
     json.recent_message do
       json.author chat.recent_message.author.name
-      json.extract! chat.recent_message, :date, :content
+      json.extract! chat.recent_message, :date, :text
+      json.uniqueId chat.recent_message.id
     end
   end
 end

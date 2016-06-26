@@ -5,7 +5,10 @@ class MessagesController < ApplicationController
   # GET /messages.json
   def index
     @messages = Chat.find(params[:chat_id]).messages.order(date: :desc)
-    render :index
+
+    @messages.each do |message|
+      message.position = message.author.name == @current_user.name ? 'right' : 'left'
+    end
   end
 
   # GET /messages/1
@@ -51,6 +54,6 @@ class MessagesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def message_params
-      params.require(:message).permit(:content)
+      params.require(:message).permit(:text)
     end
 end
