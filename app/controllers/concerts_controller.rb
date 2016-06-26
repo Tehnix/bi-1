@@ -77,8 +77,8 @@ class ConcertsController < ApplicationController
     @mutual_concerts = (@user.concerts & @current_user.concerts).length
 
     if request.post?
-      like = Like.new(owner_id: @current_user,
-                      interest_id: @liked_interest)
+      like = Like.new(owner_id: @current_user.id,
+                      interest_id: @liked_interest.id)
       like.save
     else
       @liked_interest.likes.find_by(owner_id: @current_user).destroy

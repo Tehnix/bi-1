@@ -5,9 +5,11 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
     @martin = users(:martin)
     @christian = users(:christian)
     @mads = users(:mads)
+    @benjamin = users(:benjamin)
 
     @taproot = concerts(:taproot)
     @disturbed = concerts(:disturbed)
+    @above_and_beyond = concerts(:above_and_beyond)
   end
 
   test "should list all concerts ordered by start time with images and the "\
@@ -142,34 +144,47 @@ class ConcertsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should allow a user to like and unlike an interest of another user" do
-    post "/concerts/#{@disturbed.id}/like/#{@christian.profile_id}", as: :json, headers: {
+    post "/concerts/#{@above_and_beyond.id}/like/#{@benjamin.profile_id}", as: :json, headers: {
            "Authorization" => "Token token=#{@martin.session_token}"
          }
 
-    friend_christian = User.find(@christian.id)
+    friend_christian = User.find(@benjamin.id)
     assert_equal 1, friend_christian.interests
-                                    .find_by(concert_id: @disturbed).likes.length
+                                    .find_by(concert_id: @above_and_beyond).likes.length
 
-    post "/concerts/#{@disturbed.id}/like/#{@martin.profile_id}", as: :json, headers: {
-           "Authorization" => "Token token=#{@christian.session_token}"
+    post "/concerts/#{@above_and_beyond.id}/like/#{@martin.profile_id}", as: :json, headers: {
+           "Authorization" => "Token token=#{@benjamin.session_token}"
          }
 
     friend_martin = User.find(@martin.id)
     assert_equal 1, friend_martin.interests
-                                 .find_by(concert_id: @disturbed).likes.length
+                                 .find_by(concert_id: @above_and_beyond).likes.length
 
-    # Martin likes Christian <3
     assert response.parsed_body['attendee']['likes_you']
 
-    delete "/concerts/#{@disturbed.id}/like/#{@christian.profile_id}", as: :json, headers: {
+    delete "/concerts/#{@above_and_beyond.id}/like/#{@benjamin.profile_id}", as: :json, headers: {
              "Authorization" => "Token token=#{@martin.session_token}"
            }
 
-    friend = User.find(@christian.id)
+    friend = User.find(@benjamin.id)
     assert_equal 0, friend.interests
-                          .find_by(concert_id: @disturbed).likes.length
+                          .find_by(concert_id: @above_and_beyond).likes.length
 
-    # Martin doesn't like Christian :(
-    refute response.parsed_body['attendee']['likes_you']
+    assert response.parsed_body['attendee']['likes_you']
+    refute response.parsed_body['attendee']['you_like']
+  end
+
+  test "should ensure you_like being set when concert is get after attendee is liked" do
+    post "/concerts/#{@above_and_beyond.id}/like/#{@benjamin.profile_id}", as: :json, headers: {
+           "Authorization" => "Token token=#{@martin.session_token}"
+         }
+
+    get "/concerts/#{@above_and_beyond.id}", as: :json, headers: {
+          "Authorization" => "Token token=#{@martin.session_token}"
+        }
+
+    response.parsed_body['attendees'].each do |attendee|
+      assert attendee['you_like'] if attendee['picture'] == 'benjamin_picture'
+    end
   end
 end
