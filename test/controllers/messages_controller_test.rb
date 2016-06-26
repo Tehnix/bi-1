@@ -25,9 +25,7 @@ class MessagesControllerTest < ActionDispatch::IntegrationTest
       post chat_messages_url(@above_beyond_chat), as: :json,
            headers: {
              "Authorization" => "Token token=#{@martin.session_token}"
-           }, params: { message: {
-                          profile_id: @martin.id,
-                          content: 'derpalicious' } }
+           }, params: { message: { content: 'derpalicious' } }
     end
 
     assert_response 201
