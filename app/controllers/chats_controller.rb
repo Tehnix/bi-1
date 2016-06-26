@@ -30,13 +30,24 @@ class ChatsController < ApplicationController
       head(:bad_request)
     end
 
+    # Only supports +1 chats
     if !(target_interest.likes & @current_user.likes).empty? &&
        !(target_user.likes & current_interest.likes).empty?
-      @chat = Chat.find_or_create_by(concert_id: concert_id)
-      @chat.participants << target_user
-      @chat.participants << @current_user
+      @chat = Chat.where(concert_id: concert_id)
+                  .joins(:participants)
+                  .merge(User.where(id: @current_user.id))
+                  .merge(User.where(id: target_user.id))
+                  .first
 
-      render json: @chat
+      if @chat.nil?
+        @chat = Chat.create(concert_id: concert_id)
+        @chat.participants << target_user
+        @chat.participants << @current_user
+
+        render 'show'
+      else
+        head(:bad_request)
+      end
     else
       head(:bad_request)
     end

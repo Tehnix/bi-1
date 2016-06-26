@@ -62,4 +62,18 @@ class ChatsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :bad_request
   end
+
+  test "should not continue to append participants to chat" do
+    post chats_url, as: :json,
+         params: { concert_id: @disturbed.id, profile_id: @mads.profile_id }, headers: {
+           "Authorization" => "Token token=#{@martin.session_token}"
+         }
+
+    post chats_url, as: :json,
+         params: { concert_id: @disturbed.id, profile_id: @mads.profile_id }, headers: {
+           "Authorization" => "Token token=#{@martin.session_token}"
+         }
+
+    assert_response :bad_request
+  end
 end
