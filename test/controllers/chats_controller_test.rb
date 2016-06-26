@@ -69,7 +69,8 @@ class ChatsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should not continue to append participants to chat" do
-    post chats_url, as: :json,
+    assert_difference('Chat.count', 1) do
+      post chats_url, as: :json,
          params: { concert_id: @disturbed.id, profile_id: @mads.profile_id }, headers: {
            "Authorization" => "Token token=#{@martin.session_token}"
          }
@@ -79,6 +80,6 @@ class ChatsControllerTest < ActionDispatch::IntegrationTest
            "Authorization" => "Token token=#{@martin.session_token}"
          }
 
-    assert_response :bad_request
+    end
   end
 end
