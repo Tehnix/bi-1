@@ -4,7 +4,7 @@ class MessagesController < ApplicationController
   # GET /messages
   # GET /messages.json
   def index
-    @messages = Chat.find(params[:chat_id]).messages
+    @messages = Chat.find(params[:chat_id]).messages.order(date: :desc)
     render :index
   end
 
@@ -17,9 +17,11 @@ class MessagesController < ApplicationController
   # POST /messages.json
   def create
     @message = Message.new(message_params)
+    @message.author = @current_user
+    @message.date = DateTime.now
 
     if @message.save
-      render :show, status: :created, location: @message
+      render :show, status: :created
     else
       render json: @message.errors, status: :unprocessable_entity
     end
@@ -49,6 +51,6 @@ class MessagesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def message_params
-      params.require(:message).permit(:author, :date, :content, :chat)
+      params.require(:message).permit(:content, :chat)
     end
 end

@@ -7,7 +7,7 @@ class MessagesControllerTest < ActionDispatch::IntegrationTest
     @martin = users(:martin)
   end
 
-  test "should get index of all messages in a chat" do
+  test "should get all messages in a specified chat" do
     get chat_messages_url(@above_beyond_chat), as: :json, headers: {
           "Authorization" => "Token token=#{@martin.session_token}"
         }
@@ -15,19 +15,23 @@ class MessagesControllerTest < ActionDispatch::IntegrationTest
     json = response.parsed_body
 
     msg1 = json.first
+    msg2 = json.second
 
-
-
-    assert_response :success
+    assert_operator msg1['date'], :>, msg2['date']
   end
 
-  # test "should create message" do
-  #   assert_difference('Message.count') do
-  #     post messages_url, params: { message: { author: @message.author, chat: @message.chat, content: @message.content, date: @message.date } }
-  #   end
+  test "should create message" do
+    assert_difference('Message.count') do
+      post chat_messages_url(@above_beyond_chat), as: :json,
+           headers: {
+             "Authorization" => "Token token=#{@martin.session_token}"
+           }, params: { message: {
+                          profile_id: @martin.id,
+                          content: 'derpalicious' } }
+    end
 
-  #   assert_response 201
-  # end
+    assert_response 201
+  end
 
   # test "should show message" do
   #   get message_url(@message)
