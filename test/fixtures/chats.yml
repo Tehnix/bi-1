@@ -1,15 +1,11 @@
 disturbed_chat:
-  users: martin, christian, line
+  participants: martin, christian, line
   concert: disturbed
-  unread_count: 0
 
 taproot_chat:
-  users: martin, christian, maiken
+  participants: martin, christian, maiken
   concert: taproot
-  unread_count: 0
-
 
 above_beyond_chat:
-  users: martin, benjamin
+  participants: martin, benjamin
   concert: above_and_beyond
-  unread_count: 0

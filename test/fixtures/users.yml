@@ -1,30 +1,36 @@
 martin:
   profile_id: 123456
+  name: Martin Jesper Low Madsen
   picture: 'martin_picture'
   likes: maiken, line
   session_token: martinsession
 
 christian:
   profile_id: 234561
+  name: Christian Kjær Laustsen
   picture: 'christian_picture'
   session_token: christiansession
 
 maiken:
   profile_id: 345612
+  name: Maiken Kock Rask
   picture: 'maiken_picture'
   session_token: maikensession
 
 line:
   profile_id: 456123
+  name: Line Elmshøj
   picture: 'line_picture'
   session_token: linesession
 
 mads:
   profile_id: 561234
+  name: Mads Emil Kragelund
   picture: 'mads_picture'
   session_token: madssession
 
 benjamin:
   profile_id: 612345
+  name: Benjamin Pinjo Le Fevre
   picture: 'benjamin_picture'
   session_token: benjaminsession

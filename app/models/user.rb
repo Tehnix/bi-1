@@ -1,7 +1,9 @@
 class User < ApplicationRecord
   attr_accessor :friend, :likes_you, :mutual_concerts
 
-  has_and_belongs_to_many :chats
+  has_many :chat_connections
+  has_many :chats, through: :chat_connections
+  has_many :messages
 
   has_many :interests
   has_many :concerts, through: :interests

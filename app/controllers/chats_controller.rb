@@ -1,14 +1,18 @@
 class ChatsController < ApplicationController
 
   def index
-    @chats = User.find_by(id: @current_user.id).chats
-    render json: @chats, status: :ok
+    @chats = Chat.joins(:participants)
+                 .includes(:messages).order('messages.date DESC')
+                                     .where('user_id = ?',
+                                            @current_user)
+    @chats.each do |chat|
+      chat.recent_message = chat.messages.order('date DESC')
+                                         .limit(1).first
+    end
   end
 
   def show
-    @chat = User.find_by(id: @current_user.id).chats.find(params[:id])
-
-    render :show, status: :ok, location: @chat
+    @chat = @current_user.chats.find(params[:id])
   end
 
 end

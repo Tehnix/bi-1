@@ -4,6 +4,8 @@ class Concert < ApplicationRecord
   attr_accessor :num_attendees,
                 :num_friend_attendees
 
+  has_many :chats
+
   has_many :interests
   has_many :attendees, through: :interests, class_name: 'User', source: :user, foreign_key: 'attendant_id'
 

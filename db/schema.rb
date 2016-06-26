@@ -10,24 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160625221048) do
+ActiveRecord::Schema.define(version: 20160626031818) do
+
+  create_table "chat_connections", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "chat_id"
+    t.index ["chat_id"], name: "index_chat_connections_on_chat_id"
+    t.index ["user_id"], name: "index_chat_connections_on_user_id"
+  end
 
   create_table "chats", force: :cascade do |t|
-    t.string   "type"
-    t.integer  "user_id"
     t.integer  "concert_id"
     t.string   "unread_count"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
     t.index ["concert_id"], name: "index_chats_on_concert_id"
-    t.index ["user_id"], name: "index_chats_on_user_id"
-  end
-
-  create_table "chats_users", force: :cascade do |t|
-    t.integer "chat_id"
-    t.integer "user_id"
-    t.index ["chat_id"], name: "index_chats_users_on_chat_id"
-    t.index ["user_id"], name: "index_chats_users_on_user_id"
   end
 
   create_table "concerts", force: :cascade do |t|
@@ -74,7 +71,7 @@ ActiveRecord::Schema.define(version: 20160625221048) do
   end
 
   create_table "messages", force: :cascade do |t|
-    t.string   "author"
+    t.integer  "author_id"
     t.datetime "date"
     t.string   "content"
     t.integer  "chat_id"

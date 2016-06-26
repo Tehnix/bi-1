@@ -2,10 +2,10 @@ require 'test_helper'
 
 class MessagesControllerTest < ActionDispatch::IntegrationTest
   # setup do
-  #   @message = messages(:one)
+  #   @abmsg1_martin = messages(:above_beyond_msg_1_martin)
   # end
 
-  # test "should get index" do
+  # test "should get index of all messages in a chat" do
   #   get messages_url
   #   assert_response :success
   # end

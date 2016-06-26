@@ -1,6 +1,10 @@
 class Chat < ApplicationRecord
-  has_and_belongs_to_many :users
+  attr_accessor :recent_message, :unread_count
 
+  has_many :chat_connections
+  has_many :participants, through: :chat_connections, class_name: 'User',
+           source: :user, foreign_key: 'participant_id'
   has_many :messages
+
   belongs_to :concert
 end
