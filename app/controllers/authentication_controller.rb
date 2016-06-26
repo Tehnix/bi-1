@@ -16,7 +16,7 @@ class AuthenticationController < ApplicationController
     me = FbGraph2::User.new(profile_id).authenticate(@access_token)
     begin
       # The user is valid if the fetch command is successful
-      me.fetch
+      me = me.fetch
 
       # Extend the short-term token to a long-term one
       auth = FbGraph2::Auth.new(ENV['FACEBOOK_APP_ID'],
