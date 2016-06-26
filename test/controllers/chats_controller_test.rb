@@ -5,6 +5,8 @@ require 'test_helper'
 class ChatsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @disturbed_chat = chats(:disturbed_chat)
+    @disturbed = concerts(:disturbed)
+    @taproot = concerts(:disturbed)
     @martin = users(:martin)
     @christian = users(:christian)
     @mads = users(:mads)
@@ -32,4 +34,32 @@ class ChatsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "should be able to create a new chat for two people that like one "\
+       "another" do
+    post chats_url, as: :json,
+         params: { concert_id: @disturbed.id, profile_id: @mads.profile_id }, headers: {
+           "Authorization" => "Token token=#{@martin.session_token}"
+         }
+
+    json = response.parsed_body
+    refute json['id'].nil?
+  end
+
+  test "should not be able to create a new chat for two people that haven't "\
+       "liked one another" do
+    post chats_url, as: :json, params: { concert_id: @taproot.id, profile_id: @christian.profile_id }, headers: {
+           "Authorization" => "Token token=#{@martin.session_token}"
+         }
+
+    assert_response :bad_request
+  end
+
+  test "should not be able to create a new chat for two people that don't "\
+       "share an interest" do
+    post chats_url, as: :json, params: { concert_id: @taproot.id, profile_id: @christian.profile_id }, headers: {
+           "Authorization" => "Token token=#{@martin.session_token}"
+         }
+
+    assert_response :bad_request
+  end
 end
