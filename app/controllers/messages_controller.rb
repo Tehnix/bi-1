@@ -22,6 +22,7 @@ class MessagesController < ApplicationController
     @message = Message.new(message_params)
     @message.author = @current_user
     @message.date = DateTime.now
+    @message.chat_id = params[:chat_id]
 
     if @message.save
       render :show, status: :created

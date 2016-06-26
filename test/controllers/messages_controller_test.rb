@@ -28,6 +28,11 @@ class MessagesControllerTest < ActionDispatch::IntegrationTest
            }, params: { message: { text: 'derpalicious' } }
     end
 
+    assert_equal 'derpalicious', @above_beyond_chat.messages
+                                                   .order("created_at")
+                                                   .last
+                                                   .text
+
     assert_response 201
   end
 
