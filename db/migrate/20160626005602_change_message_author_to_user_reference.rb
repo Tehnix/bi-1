@@ -1,6 +1,6 @@
 class ChangeMessageAuthorToUserReference < ActiveRecord::Migration[5.0]
   def up
-    change_column :messages, :author, :integer
+    change_column :messages, :author, 'integer USING CAST(author AS integer)'
     rename_column :messages, :author, :author_id
   end
 
