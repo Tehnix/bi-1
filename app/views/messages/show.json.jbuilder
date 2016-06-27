@@ -1,1 +1,1 @@
-'DICK'
+json.dick 'DICK'
