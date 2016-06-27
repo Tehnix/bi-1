@@ -4,7 +4,7 @@ class MessagesController < ApplicationController
   # GET /messages
   # GET /messages.json
   def index
-    @messages = Chat.find(params[:chat_id]).messages.order(date: :desc)
+    @messages = Chat.find(params[:chat_id]).messages.order(date: :asc)
 
     @messages.each do |message|
       message.position = message.author.name == @current_user.name ? 'right' : 'left'
