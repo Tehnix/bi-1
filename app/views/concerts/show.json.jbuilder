@@ -6,8 +6,9 @@ json.images @concert.images do |image|
 end
 
 json.attendees(@interests) do |interest|
-  json.extract! interest.user, :profile_id, :name, :picture, :friend,
+  json.extract! interest.user, :name, :picture, :friend,
                 :likes_you, :you_like, :mutual_concerts
+  json.profile_id  interest.user.profile_id.to_s
   json.interest do
     json.extract! interest, :individual, :group
   end
