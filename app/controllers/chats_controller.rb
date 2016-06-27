@@ -33,7 +33,7 @@ class ChatsController < ApplicationController
                                         concert_id: concert_id)
 
     if target_interest.nil? || current_interest.nil?
-      head(:bad_request)
+      render json: { error: 'No overlapping interests' }, status: :bad_request
     end
 
     # Only supports +1 chats
@@ -53,7 +53,7 @@ class ChatsController < ApplicationController
 
       render 'show'
     else
-      head(:bad_request)
+      render json: { error: 'No bi-directional +1s' }, status: :bad_request
     end
   end
 

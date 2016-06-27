@@ -17,7 +17,7 @@ class MessagesControllerTest < ActionDispatch::IntegrationTest
     msg1 = json.first
     msg2 = json.second
 
-    assert_operator msg1['date'], :>, msg2['date']
+    assert_operator msg1['date'], :<, msg2['date']
   end
 
   test "should create message" do

@@ -40,7 +40,7 @@ class ConcertsController < ApplicationController
 
       render 'show'
     else
-      head(:bad_request)
+      render json: { error: 'You are not attending this concert' }, status: :bad_request
     end
   end
 
@@ -54,7 +54,7 @@ class ConcertsController < ApplicationController
 
       render 'show'
     else
-      head(:bad_request)
+      render json: { error: 'You are not attending this concert' }, status: :bad_request
     end
   end
 
@@ -68,7 +68,7 @@ class ConcertsController < ApplicationController
 
       render 'show'
     else
-      head(:bad_request)
+      render json: { error: 'You are not attending this concert' }, status: :bad_request
     end
   end
 
@@ -81,7 +81,8 @@ class ConcertsController < ApplicationController
                       interest_id: @liked_interest.id)
       like.save
     else
-      @liked_interest.likes.find_by(owner_id: @current_user).destroy
+      existing_like = @liked_interest.likes.find_by(owner_id: @current_user)
+      existing_like.destroy unless existing_like.nil?
     end
 
     @you_like = !like.nil?
